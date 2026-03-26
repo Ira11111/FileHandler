@@ -14,8 +14,10 @@ phrases = [
 output_dir = "./test"
 os.makedirs(output_dir, exist_ok=True)
 
-def gen_file() -> str:
-    string_count = int(os.getenv("COUNT", 20_000))
+def gen_file_env():
+    return gen_file(int(os.getenv("COUNT", 20_000)))
+
+def gen_file(string_count: int) -> str:
     print(f"Генерируем файл на {string_count} строк. Подождите пару секунд...")
 
     file_name = f"./test/files/{string_count}_{uuid.uuid4()}.txt"
@@ -28,4 +30,4 @@ def gen_file() -> str:
     return file_name
 
 if __name__ == "__main__":
-    gen_file()
+    gen_file_env()
