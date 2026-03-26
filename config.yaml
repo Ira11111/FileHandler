@@ -4,4 +4,4 @@ broker:
   broker_url: "redis://broker:6379/0"
   backend_url: "redis://broker:6379/0"
   visibility_timeout: 43200
-  max_retries: 1
+  max_retries: 0

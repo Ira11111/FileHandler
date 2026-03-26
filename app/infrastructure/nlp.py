@@ -29,8 +29,8 @@ def generate_word_statistics(input_filepath: str, output_filepath: str, target_l
                 if lemma != target_lemma:
                     continue
 
-                stats[lemma]["total"] += 1
-                stats[lemma]["lines"][line_idx] = stats["lines"].get(line_idx, 0) + 1
+                stats["total"] += 1
+                stats["lines"][line_idx] = stats["lines"].get(line_idx, 0) + 1
 
     print(f"Анализ завершен. Всего строк содержащих словоформу: {total_lines}.")
     print(f"Формируем Excel файл: {output_filepath}")

@@ -82,7 +82,7 @@ async def download_report(task_id: str):
     Отдает пользователю готовый Excel файл по ID задачи.
     """
     # Формируем путь к файлу, который должен был создать Celery
-    file_path = os.path.join(REPORTS_DIR, f"{task_id}_report.xlsx")
+    file_path = os.path.join(REPORTS_DIR, f"{task_id}.xlsx")
 
     # Проверяем, существует ли физически этот файл
     if not os.path.exists(file_path):

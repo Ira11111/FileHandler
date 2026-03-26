@@ -20,8 +20,7 @@ def process_text_task(self, input_filepath: str, task_id: str):
     Фоновая задача Celery. Читает файл, собирает статистику, генерирует Excel.
     """
 
-    original_name, _ = os.path.splitext(input_filepath)
-    output_filepath = os.path.join(REPORTS_DIR, f"{task_id}_{original_name}_report.xlsx")
+    output_filepath = os.path.join(REPORTS_DIR, f"{task_id}.xlsx")
 
     try:
         generate_word_statistics(input_filepath, output_filepath)
