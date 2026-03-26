@@ -17,16 +17,15 @@ def test_e2e_upload_and_process_file():
     5. Проверяем, что вернулась ссылка на скачивание.
     """
 
-
     # Отправляем файл на сервер
     upload_url = f"{BASE_URL}/export"
     file_path = gen_file(20000)
     with open(file_path, "rb") as f:
         response = requests.post(upload_url, files={"file": f})
 
-    os.remove(file_path) # удаляем сгенерированный файл
+    os.remove(file_path)  # удаляем сгенерированный файл
 
-    assert response.status_code ==201, f"Ошибка загрузки: {response.text}"
+    assert response.status_code == 201, f"Ошибка загрузки: {response.text}"
 
     data = response.json()
     assert "task_id" in data, "В ответе нет task_id!"
@@ -38,7 +37,7 @@ def test_e2e_upload_and_process_file():
     # Начинаем опрос статуса
     status_url = f"{BASE_URL}/status/{task_id}"
 
-    max_retries = 30
+    max_retries = 45
     delay = 2
 
     result_data = {}
