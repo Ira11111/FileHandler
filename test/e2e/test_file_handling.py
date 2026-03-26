@@ -1,3 +1,4 @@
+import os
 import time
 import requests
 
@@ -22,6 +23,8 @@ def test_e2e_upload_and_process_file():
     file_path = gen_file(20000)
     with open(file_path, "rb") as f:
         response = requests.post(upload_url, files={"file": f})
+
+    os.remove(file_path) # удаляем сгенерированный файл
 
     assert response.status_code ==201, f"Ошибка загрузки: {response.text}"
 
