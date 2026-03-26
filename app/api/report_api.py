@@ -1,22 +1,21 @@
 import os
 import shutil
 import uuid
-from fastapi import UploadFile, File, HTTPException
+from fastapi import UploadFile, File, HTTPException, APIRouter
 from fastapi.responses import FileResponse
 from celery.result import AsyncResult
+from starlette import status
 
 from ..domain.entities import TaskResponse, TaskStatusEnum
-from app.main import UPLOAD_DIR, REPORTS_DIR, app
+from app.config.config import UPLOAD_DIR, REPORTS_DIR
 from ..infrastructure.task_queue import process_text_task, celery_app
 
-# Инициализируем приложение
 
+router = APIRouter(tags=["Отчеты"])
 
-# Папка для сохранения загруженных файлов
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-
-@app.post("/public/report/export", summary="Загрузить файл для анализа")
+@router.post("/public/report/export",
+             summary="Загрузить файл для анализа",
+             status_code=status.HTTP_201_CREATED)
 async def export_report(file: UploadFile = File(...)):
     """
     Принимает файл, сохраняет его на диск потоково и ставит задачу в очередь.
@@ -43,13 +42,13 @@ async def export_report(file: UploadFile = File(...)):
     process_text_task.apply_async(args=[file_path, str(task_id)], task_id=str(task_id))
 
     return TaskResponse(
-        task_id=str(task_id),
+        task_id=task_id,
         status=TaskStatusEnum.PENDING,
         download_url=None
     )
 
 
-@app.get("/public/report/status/{task_id}", summary="Проверить статус задачи")
+@router.get("/public/report/status/{task_id}", summary="Проверить статус задачи")
 async def get_status(task_id: str):
     result = AsyncResult(task_id, app=celery_app)
 
@@ -77,7 +76,7 @@ async def get_status(task_id: str):
     )
 
 
-@app.get("/public/report/download/{task_id}", summary="Скачать готовый отчет")
+@router.get("/public/report/download/{task_id}", summary="Скачать готовый отчет")
 async def download_report(task_id: str):
     """
     Отдает пользователю готовый Excel файл по ID задачи.

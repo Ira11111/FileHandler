@@ -14,12 +14,18 @@ phrases = [
 output_dir = "./test"
 os.makedirs(output_dir, exist_ok=True)
 
-string_count = int(os.getenv("COUNT", 20_000))
-print(f"Генерируем файл на {string_count} строк. Подождите пару секунд...")
+def gen_file() -> str:
+    string_count = int(os.getenv("COUNT", 20_000))
+    print(f"Генерируем файл на {string_count} строк. Подождите пару секунд...")
 
-# Открываем файл на запись
-with open(f"./test/{string_count}_{uuid.uuid4()}.txt", "w", encoding="utf-8") as f:
-    for _ in range(string_count):
-        f.write(random.choice(phrases))
+    file_name = f"./test/files/{string_count}_{uuid.uuid4()}.txt"
+    # Открываем файл на запись
+    with open(file_name, "w", encoding="utf-8") as f:
+        for _ in range(string_count):
+            f.write(random.choice(phrases))
 
-print("Готово!")
+    print("Готово!")
+    return file_name
+
+if __name__ == "__main__":
+    gen_file()
