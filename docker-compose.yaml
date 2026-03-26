@@ -1,0 +1,23 @@
+services:
+  broker:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - broker
+
+  worker:
+    build: .
+    command: celery -A app.infrastructure.task_queue worker --loglevel=info --concurrency=5
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - broker
