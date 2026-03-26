@@ -11,3 +11,6 @@ test-file:
 
 test-e2e:
 	PYTHONPATH=. pytest ./test/e2e/test_file_handling.py -s
+
+gen-file:
+	python ./utils/gen_file.py
